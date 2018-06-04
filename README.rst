@@ -27,7 +27,6 @@ Any kind of modification might happen, without guaranteeing compatibility.
 Some features that might land at some point:
 
 * UI improvments
-* File/container deletion
 * File expiration
 
 How to run it
@@ -102,4 +101,4 @@ Contributions are welcome. you can report issues, ask for new features, and
 create pull requests on the `github project
 <https://github.com/gpocentek/sendfilestome>`__.
 
-UI contributions are very welcome. Is it ugly and needs to be improved.
+UI contributions are very welcome. The UI is ugly and needs to be improved.
