@@ -1,0 +1,37 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html>
+  <head>
+    {% bootstrap_css %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    {% bootstrap_javascript %}
+    {% block "header" %}{% endblock %}
+    <style>
+    nav {
+      margin-bottom: 20px;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container align-items-center">
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Send Files To Me</a>
+
+        <ul class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+            {% if user.is_staff %}
+            <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+            {% endif %}
+            <li class="nav-item"><a class="nav-link" href="/accounts/logout">Logout</a></li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link" href="/accounts/login">Login</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+
+    <main role="main" class="container">
+{% block "content" %}{% endblock %}
+    </main>
+  </body>
+</html>

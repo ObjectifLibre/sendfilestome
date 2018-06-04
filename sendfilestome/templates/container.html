@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block "content" %}
+<div class="row">
+  {% if request.user.can_download %}
+  <div class="col-md-8">
+    <h3>{{ container.name }} - files</h3>
+    {% if container.description %}
+    <h6>{{ container.description }}</h6>
+    {% endif %}
+    <hr />
+    <ul class="list-group">
+      {% for f in files %}
+      <li class="list-group-item" id="c_file_{{ f.id }}">
+        <a href="/c/{{ container.name }}/{{ f.name }}">{{ f.name }} ({{ f.file.size|filesizeformat }})</a>
+        {% if request.user.can_upload %}
+        <span class="float-right"><a href="#" onclick="delete_file('/c/{{ container.name }}/{{ f.name }}');">delete</a></span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if request.user.can_upload %}
+  <div class="col-md-4">
+    <h3>Upload a file</h3>
+    <hr />
+    <form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% bootstrap_form form layout="horizontal" %}
+      {% buttons layout="horizontal" %}
+      <button type="submit" class="btn btn-primary">Send!</button>
+      {% endbuttons %}
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function delete_file(url) {
+  if (confirm('Do you really want to delete this file?')) {
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
+      },
+      success: function() {
+        location.reload();
+      }
+    });
+  }
+  return false;
+}
+$("#id_file").change(function(evt) {
+  $("#id_name").val(evt.target.files[0].name);
+});
+
+var urlParams = new URLSearchParams(window.location.search);
+var highlight = (urlParams.get('highlight'));
+if (highlight) {
+  $("#c_file_" + highlight).addClass('list-group-item-info');
+}
+</script>
+{% endblock %}

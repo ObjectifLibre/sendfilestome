@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block "content" %}
+<div class="row">
+  <div class="col-md-8">
+    <h3>Containers</h3>
+    <hr />
+    <ul class="list-group">
+      {% for c in containers %}
+      <li class="list-group-item">
+        <a href="/c/{{ c.name }}">{{ c.name }}</a>
+        {% if request.user.can_upload %}
+        <span class="float-right"><a href="#" onclick="delete_container('/c/{{ c.name }}');">delete</a></span>
+        {% endif %}
+        {% if c.description %}<br /><em>{{ c.description }}</em>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {% if request.user.can_upload %}
+  <div class="col-md-4">
+    <h3>Create a container</h3>
+    <hr />
+    <form method="post" class="form-horizontal" role="form">
+      {% csrf_token %}
+      {% bootstrap_form form layout="horizontal" %}
+      {% buttons layout="horizontal" %}
+      <button type="submit" class="btn btn-primary">Create</button>
+      {% endbuttons %}
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function delete_container(url) {
+  if (confirm('Do you really want to delete this container and ALL its files?')) {
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
+      },
+      success: function() {
+        location.reload();
+      }
+    });
+  }
+  return false;
+}
+</script>
+{% endblock %}
