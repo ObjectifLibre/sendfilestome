@@ -5,7 +5,9 @@ RUN mkdir -p /sendfilestome/uploads
 WORKDIR /sendfilestome
 COPY entrypoint.sh manage.py requirements.txt ./
 ADD sendfilestome /sendfilestome/sendfilestome
-RUN chown -R app /sendfilestome && pip install -r requirements.txt
+RUN cp /sendfilestome/sendfilestome/settings.py.example /sendfilestome/sendfilestome/settings.py && \
+    chown -R app /sendfilestome && \
+    pip install -r requirements.txt
 
 USER app
 EXPOSE 8000
