@@ -75,8 +75,9 @@ caching and storage. See the `Django 2.0 documentation
 <https://docs.djangoproject.com/en/2.0/topics/settings/>`__ for more
 information on these settings.
 
-The following settings are specific to SendFilesToMe and can be set in
-``sendfilestome/settings.py``:
+The following settings are specific to SendFilesToMe. You can define these
+settings in ``sendfilestome/settings.py`` or in
+``sendfilestome/local_settings.py``:
 
 ``MEDIA_ROOT``
     Path to the storage directory, where uploaded files will be stored.
@@ -93,6 +94,11 @@ The following settings are specific to SendFilesToMe and can be set in
 ``SFTM_LIST_ALL_WHEN_AUTHENTICATED``
     If ``True`` authenticated users can list all the containers, including
     those marked as non listable. Default: ``True``.
+
+.. note::
+
+   You can override all the Django settings in
+   ``sendfilestome/local_settings.py`` as well.
 
 Contributing
 ============
