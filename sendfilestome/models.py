@@ -30,7 +30,7 @@ class Container(models.Model):
         help_text="Uncheck this option to hide the container from the listing")
     requires_auth = models.BooleanField(
         default=False,
-        help_text=("Check this opetion to make the container available to "
+        help_text=("Check this option to make the container available to "
                    "authenticated users only"))
     created_at = models.DateTimeField(auto_now_add=True)
 
