@@ -1,5 +1,6 @@
 FROM python:3.6
 
+RUN apt update && apt install -y libldap2-dev libsasl2-dev && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --gecos '' app
 RUN mkdir -p /sendfilestome/uploads
 WORKDIR /sendfilestome
