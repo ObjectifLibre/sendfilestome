@@ -16,7 +16,7 @@ import os
 import uuid
 
 from django import views
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, FileResponse
 from django.core.exceptions import PermissionDenied
 from django.core.files import File
 from django.conf import settings
@@ -133,7 +133,7 @@ class SFTMFile(views.View):
 
         container = get_object_or_404(models.Container, name=container_name)
         uploaded_file = get_object_or_404(models.SFTMFile, name=file_name)
-        response = HttpResponse(uploaded_file.file)
+        response = FileResponse(uploaded_file.file)
         response['Content-Length'] = uploaded_file.file.size
         response['Content-Disposition'] = ('attachment; filename="%s"' %
                                            file_name)
