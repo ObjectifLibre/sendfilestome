@@ -26,4 +26,4 @@ class ContainerCreateForm(forms.ModelForm):
 class SFTMFileUpload(forms.ModelForm):
     class Meta:
         model = models.SFTMFile
-        fields = ['name', 'file']
+        fields = ['file', 'name']
