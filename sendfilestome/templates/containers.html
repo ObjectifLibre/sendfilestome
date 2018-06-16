@@ -8,9 +8,9 @@
     <ul class="list-group">
       {% for c in containers %}
       <li class="list-group-item">
-        <a href="/c/{{ c.name }}">{{ c.name }}</a>
+        <a href="{% url "container" c.name %}">{{ c.name }}</a>
         {% if request.user.can_upload %}
-        <span class="float-right"><a href="#" onclick="delete_container('/c/{{ c.name }}');">delete</a></span>
+        <span class="float-right"><a href="#" onclick="delete_container('{% url "container" c.name %}');">delete</a></span>
         {% endif %}
         {% if c.description %}<br /><em>{{ c.description }}</em>{% endif %}
       </li>

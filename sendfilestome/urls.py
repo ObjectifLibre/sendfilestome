@@ -20,13 +20,14 @@ from django.contrib.auth import views as auth_views
 from sendfilestome import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls, name='admin'),
     url(r'^accounts/login/$', auth_views.LoginView.as_view(),
         name='account_login'),
     url(r'^accounts/logout/$', auth_views.LogoutView.as_view(next_page='/'),
         name='account_logout'),
-    url('^$', views.Index.as_view()),
+    url('^$', views.Index.as_view(), name='index'),
     url('c/(?P<container_name>[^/]+)/(?P<file_name>[a-zA-Z0-9-_.]+)$',
-        views.SFTMFile.as_view()),
-    url('c/(?P<container_name>[^/]+)$', views.Container.as_view()),
+        views.SFTMFile.as_view(), name='file'),
+    url('c/(?P<container_name>[^/]+)$', views.Container.as_view(),
+        name='container'),
 ]

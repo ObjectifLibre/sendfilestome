@@ -21,6 +21,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.files import File
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 
 from sendfilestome import models
 from sendfilestome import forms
@@ -74,7 +75,7 @@ class Index(views.View):
             if not container.name:
                 container.name = str(uuid.uuid4())
             container.save()
-            return redirect('/c/%s' % container.name)
+            return redirect(reverse('container', args=[container.name]))
 
         containers = self._list_containers(request)
 
@@ -108,8 +109,8 @@ class Container(views.View):
             uploaded_file = form.save(commit=False)
             uploaded_file.container = container
             uploaded_file.save()
-            return redirect('/c/%s?highlight=%s' % (container_name,
-                                                    uploaded_file.id))
+            url = reverse('container', args=[container_name])
+            return redirect('%s?highlight=%s' % (url, uploaded_file.id))
 
         files = models.SFTMFile.objects.filter(container_id=container.id)
         env = {'container': container, 'files': files, 'form': form}
