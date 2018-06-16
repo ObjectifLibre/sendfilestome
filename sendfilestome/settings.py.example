@@ -129,3 +129,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 SFTM_UPLOAD_AUTH_ENABLED = False
 SFTM_DOWNLOAD_AUTH_ENABLED = False
 SFTM_LIST_ALL_WHEN_AUTHENTICATED = True
+
+# try to import local settings that will override the default ones
+try:
+    from sendfilestome.local_settings import *
+except ImportError:
+    pass
