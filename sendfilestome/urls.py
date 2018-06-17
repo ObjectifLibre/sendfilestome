@@ -20,7 +20,7 @@ from django.contrib.auth import views as auth_views
 from sendfilestome import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls, name='admin'),
+    url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/$', auth_views.LoginView.as_view(),
         name='account_login'),
     url(r'^accounts/logout/$', auth_views.LogoutView.as_view(next_page='/'),
