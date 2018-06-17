@@ -15,12 +15,19 @@
 from django import forms
 
 from sendfilestome import models
+from sendfilestome import utils
 
 
 class ContainerCreateForm(forms.ModelForm):
     class Meta:
         model = models.Container
         fields = ['name', 'description', 'listable', 'requires_auth']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not utils.auth_enabled():
+            self.fields.pop('requires_auth')
 
 
 class SFTMFileUpload(forms.ModelForm):

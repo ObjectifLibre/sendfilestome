@@ -23,8 +23,9 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
-from sendfilestome import models
 from sendfilestome import forms
+from sendfilestome import models
+from sendfilestome import utils
 
 
 def _set_user_props(user):
@@ -36,6 +37,12 @@ def _set_user_props(user):
 
     if settings.SFTM_DOWNLOAD_AUTH_ENABLED:
         user.can_download = user.is_authenticated
+
+
+def _get_env(local_env):
+    env = {'auth_enabled': utils.auth_enabled()}
+    env.update(local_env)
+    return env
 
 
 class Index(views.View):
@@ -61,7 +68,7 @@ class Index(views.View):
             containers = []
 
         form = forms.ContainerCreateForm()
-        env = {'containers': containers, 'form': form}
+        env = _get_env({'containers': containers, 'form': form})
         return render(request, 'containers.html', env)
 
     def post(self, request):
@@ -79,7 +86,7 @@ class Index(views.View):
 
         containers = self._list_containers(request)
 
-        env = {'containers': containers, 'form': form}
+        env = _get_env({'containers': containers, 'form': form})
         return render(request, 'containers.html', env)
 
 
@@ -95,7 +102,7 @@ class Container(views.View):
 
         files = models.SFTMFile.objects.filter(container=container)
         form = forms.SFTMFileUpload()
-        env = {'container': container, 'files': files, 'form': form}
+        env =_get_env( {'container': container, 'files': files, 'form': form})
         return render(request, 'container.html', env)
 
     def post(self, request, container_name):
@@ -113,7 +120,7 @@ class Container(views.View):
             return redirect('%s?highlight=%s' % (url, uploaded_file.id))
 
         files = models.SFTMFile.objects.filter(container_id=container.id)
-        env = {'container': container, 'files': files, 'form': form}
+        env = _get_env({'container': container, 'files': files, 'form': form})
         return render(request, 'container.html', env)
 
     def delete(self, request, container_name):
