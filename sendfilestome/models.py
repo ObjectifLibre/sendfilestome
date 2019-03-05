@@ -23,7 +23,7 @@ name_validator = RegexValidator(r'^[0-9a-zA-Z-_.]+$',
 class Container(models.Model):
     name = models.CharField(
         max_length=64, validators=[name_validator], unique=True, blank=True,
-        help_text="Leave empty to generate a UUID")
+        help_text="Leave empty to generate a random name (UUID)")
     description = models.CharField(max_length=256, blank=True)
     listable = models.BooleanField(
         default=True,

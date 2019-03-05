@@ -4,7 +4,7 @@
 <div class="row">
   <div class="col-md-8">
     <hr />
-    <h3>Containers</h3>
+    <h3>Folders</h3>
     <hr />
     <ul class="list-group">
       {% for c in containers %}
@@ -22,7 +22,7 @@
   {% if request.user.can_upload %}
   <div class="col-md-4">
     <hr />
-    <h3>Create a container</h3>
+    <h3>Create a Folder</h3>
     <hr />
     <form method="post" class="form-horizontal" role="form">
       {% csrf_token %}
@@ -37,7 +37,7 @@
 
 <script>
 function delete_container(url) {
-  if (confirm('Do you really want to delete this container and ALL its files?')) {
+  if (confirm('Do you really want to delete this folder and ALL its files?')) {
     $.ajax({
       url: url,
       type: 'DELETE',
