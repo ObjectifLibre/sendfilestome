@@ -3,6 +3,7 @@
 {% block "content" %}
 <div class="row">
   <div class="col-md-8">
+    <hr />
     <h3>Containers</h3>
     <hr />
     <ul class="list-group">
@@ -20,12 +21,13 @@
 
   {% if request.user.can_upload %}
   <div class="col-md-4">
+    <hr />
     <h3>Create a container</h3>
     <hr />
     <form method="post" class="form-horizontal" role="form">
       {% csrf_token %}
       {% bootstrap_form form layout="horizontal" %}
-      {% buttons layout="horizontal" %}
+      {% buttons %}
       <button type="submit" class="btn btn-primary">Create</button>
       {% endbuttons %}
     </form>

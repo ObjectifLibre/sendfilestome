@@ -101,23 +101,36 @@ class Container(views.View):
             raise Http404
 
         files = models.SFTMFile.objects.filter(container=container)
-        form = forms.SFTMFileUpload()
-        env =_get_env( {'container': container, 'files': files, 'form': form})
+        upload_form = forms.SFTMFileUpload()
+        edit_form = forms.ContainerCreateForm(instance=container)
+        env =_get_env({'container': container,
+                       'files': files,
+                       'upload_form': upload_form,
+                       'edit_form': edit_form})
         return render(request, 'container.html', env)
 
     def post(self, request, container_name):
         _set_user_props(request.user)
-        if not request.user.can_upload:
-            raise PermissionDenied
 
         container = get_object_or_404(models.Container, name=container_name)
-        form = forms.SFTMFileUpload(request.POST, request.FILES)
-        if form.is_valid():
-            uploaded_file = form.save(commit=False)
-            uploaded_file.container = container
-            uploaded_file.save()
-            url = reverse('container', args=[container_name])
-            return redirect('%s?highlight=%s' % (url, uploaded_file.id))
+        print(request.POST)
+        if 'upload' in request.POST:
+            if not request.user.can_upload:
+                raise PermissionDenied
+            form = forms.SFTMFileUpload(request.POST, request.FILES)
+            if form.is_valid():
+                uploaded_file = form.save(commit=False)
+                uploaded_file.container = container
+                uploaded_file.save()
+                url = reverse('container', args=[container_name])
+                return redirect('%s?highlight=%s' % (url, uploaded_file.id))
+        elif 'description' in request.POST:
+            form = forms.ContainerCreateForm(request.POST, instance=container)
+            if form.is_valid():
+                if not container.name:
+                    container.name = str(uuid.uuid4())
+                form.save()
+                return redirect(reverse('container', args=[container.name]))
 
         files = models.SFTMFile.objects.filter(container_id=container.id)
         env = _get_env({'container': container, 'files': files, 'form': form})

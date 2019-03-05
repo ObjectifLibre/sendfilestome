@@ -5,6 +5,7 @@
 <div class="row">
   {% if request.user.can_download %}
   <div class="col-md-8">
+    <hr />
     <h3>{{ container.name }} - files</h3>
     {% if container.description %}
     <h6>{{ container.description }}</h6>
@@ -25,13 +26,26 @@
 
   {% if request.user.can_upload %}
   <div class="col-md-4">
+    <hr />
     <h3>Upload a file</h3>
     <hr />
     <form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
       {% csrf_token %}
-      {% bootstrap_form form layout="horizontal" %}
-      {% buttons layout="horizontal" %}
-      <button type="submit" class="btn btn-primary">Send!</button>
+      {% bootstrap_form upload_form layout="horizontal" %}
+      {% buttons %}
+      <button type="submit" name='upload' class="btn btn-primary">Upload</button>
+      {% endbuttons %}
+    </form>
+
+    <br />
+    <hr />
+    <h3>Update the container info</h3>
+    <hr />
+    <form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% bootstrap_form edit_form layout="horizontal" %}
+      {% buttons %}
+      <button type="submit" name='edit' class="btn btn-primary">Update</button>
       {% endbuttons %}
     </form>
   </div>
