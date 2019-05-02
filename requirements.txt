@@ -2,7 +2,7 @@ Django>=2.0
 django-bootstrap4
 django-cleanup
 django-auth-ldap
-pymysql>=1.3.13
+pymysql
 python-memcached
 gunicorn
 whitenoise
