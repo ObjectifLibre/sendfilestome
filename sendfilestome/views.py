@@ -113,26 +113,29 @@ class Container(views.View):
         _set_user_props(request.user)
 
         container = get_object_or_404(models.Container, name=container_name)
+        upload_form = forms.SFTMFileUpload(request.POST, request.FILES)
+        edit_form = forms.ContainerCreateForm(request.POST, instance=container)
         if 'upload' in request.POST:
             if not request.user.can_upload:
                 raise PermissionDenied
-            form = forms.SFTMFileUpload(request.POST, request.FILES)
-            if form.is_valid():
-                uploaded_file = form.save(commit=False)
+            if upload_form.is_valid():
+                uploaded_file = upload_form.save(commit=False)
                 uploaded_file.container = container
                 uploaded_file.save()
                 url = reverse('container', args=[container_name])
                 return redirect('%s?highlight=%s' % (url, uploaded_file.id))
         elif 'description' in request.POST:
-            form = forms.ContainerCreateForm(request.POST, instance=container)
-            if form.is_valid():
+            if edit_form.is_valid():
                 if not container.name:
                     container.name = str(uuid.uuid4())
-                form.save()
+                edit_form.save()
                 return redirect(reverse('container', args=[container.name]))
 
-        files = models.SFTMFile.objects.filter(container_id=container.id)
-        env = _get_env({'container': container, 'files': files, 'form': form})
+        files = models.SFTMFile.objects.filter(container=container)
+        env =_get_env({'container': container,
+                       'files': files,
+                       'upload_form': upload_form,
+                       'edit_form': edit_form})
         return render(request, 'container.html', env)
 
     def delete(self, request, container_name):
