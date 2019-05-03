@@ -113,7 +113,6 @@ class Container(views.View):
         _set_user_props(request.user)
 
         container = get_object_or_404(models.Container, name=container_name)
-        print(request.POST)
         if 'upload' in request.POST:
             if not request.user.can_upload:
                 raise PermissionDenied
