@@ -39,7 +39,7 @@ class Container(models.Model):
 
 
 class SFTMFile(models.Model):
-    name = models.CharField(max_length=64, unique=True, blank=False,
+    name = models.CharField(max_length=64, blank=False,
                             validators=[name_validator])
     file = models.FileField()
     container = models.ForeignKey('Container', on_delete=models.CASCADE,

@@ -33,4 +33,5 @@ class ContainerCreateForm(forms.ModelForm):
 class SFTMFileUpload(forms.ModelForm):
     class Meta:
         model = models.SFTMFile
-        fields = ['file', 'name']
+        fields = ['file', 'name', 'container']
+        widgets = {'container': forms.HiddenInput()}

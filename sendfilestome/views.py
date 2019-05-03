@@ -101,7 +101,7 @@ class Container(views.View):
             raise Http404
 
         files = models.SFTMFile.objects.filter(container=container)
-        upload_form = forms.SFTMFileUpload()
+        upload_form = forms.SFTMFileUpload(initial={'container': container})
         edit_form = forms.ContainerCreateForm(instance=container)
         env =_get_env({'container': container,
                        'files': files,
@@ -119,9 +119,7 @@ class Container(views.View):
             if not request.user.can_upload:
                 raise PermissionDenied
             if upload_form.is_valid():
-                uploaded_file = upload_form.save(commit=False)
-                uploaded_file.container = container
-                uploaded_file.save()
+                uploaded_file = upload_form.save()
                 url = reverse('container', args=[container_name])
                 return redirect('%s?highlight=%s' % (url, uploaded_file.id))
         elif 'description' in request.POST:
@@ -155,7 +153,8 @@ class SFTMFile(views.View):
             raise Http404
 
         container = get_object_or_404(models.Container, name=container_name)
-        uploaded_file = get_object_or_404(models.SFTMFile, name=file_name)
+        uploaded_file = get_object_or_404(models.SFTMFile, name=file_name,
+                                          container=container)
         response = FileResponse(uploaded_file.file)
         response['Content-Length'] = uploaded_file.file.size
         response['Content-Disposition'] = ('attachment; filename="%s"' %
@@ -168,7 +167,8 @@ class SFTMFile(views.View):
             raise PermissionDenied
 
         container = get_object_or_404(models.Container, name=container_name)
-        uploaded_file = get_object_or_404(models.SFTMFile, name=file_name)
+        uploaded_file = get_object_or_404(models.SFTMFile, name=file_name,
+                                          container=container)
 
         uploaded_file.delete()
         return HttpResponse(status=202)
