@@ -32,6 +32,16 @@ Some features that might land at some point:
 How to run it
 =============
 
+First, install the system dependencies required to build python-ldap:
+
+.. code-block:: shell
+
+   # Debian/Ubuntu, as root
+   $ apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev
+
+   # CentOS/RHEL, as root
+   $ yum install python-devel openldap-devel
+
 .. code-block:: console
 
    $ git clone https://github.com/gpocentek/sendfilestome
@@ -39,9 +49,10 @@ How to run it
    $ python3 -m venv venv
    $ . venv/bin/activate
    (venv) $ pip install -r requirements.txt
-   (venv) $ cp senfilestome/settings.py.example senfilestome/settings.py
+   (venv) $ cp sendfilestome/settings.py.example sendfilestome/settings.py
    (venv) $ mkdir -p uploads
    (venv) $ ./manage.py createsuperuser  # if you need authentication
+   (venv) $ python manage.py migrate # On the first start only
    (venv) $ gunicorn -b 0.0.0.0:8000 sendfilestome.wsgi
 
 How to use it
