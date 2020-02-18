@@ -1,4 +1,4 @@
-Django>=2.2.9,<3
+Django>=2.2.10,<3
 django-bootstrap4
 django-cleanup
 django-auth-ldap
