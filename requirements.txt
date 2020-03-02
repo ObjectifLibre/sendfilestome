@@ -6,3 +6,4 @@ pymysql
 python-memcached
 gunicorn
 whitenoise
+djangorestframework
