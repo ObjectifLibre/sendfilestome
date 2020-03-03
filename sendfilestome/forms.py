@@ -21,17 +21,28 @@ from sendfilestome import utils
 class ContainerCreateForm(forms.ModelForm):
     class Meta:
         model = models.Container
-        fields = ['name', 'description', 'listable', 'requires_auth']
+        fields = ["name", "description", "listable", "requires_auth"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if not utils.auth_enabled():
-            self.fields.pop('requires_auth')
+            self.fields.pop("requires_auth")
 
 
 class SFTMFileUpload(forms.ModelForm):
+    def clean_name(self):
+        file_name = self.cleaned_data["name"]
+        try:
+            # Check if file_name exists already in database.
+            # Avoid error 500 when user is trying to upload a existing file name
+            # in a different container
+            models.SFTMFile.objects.get(name=file_name)
+            raise forms.ValidationError(file_name + " already exists")
+        except models.SFTMFile.DoesNotExist:
+            return file_name
+
     class Meta:
         model = models.SFTMFile
-        fields = ['file', 'name', 'container']
-        widgets = {'container': forms.HiddenInput()}
+        fields = ["file", "name", "container"]
+        widgets = {"container": forms.HiddenInput()}

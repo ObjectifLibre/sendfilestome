@@ -17,6 +17,8 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
+from rest_framework.authtoken import views as rest_views
+
 from sendfilestome import views
 
 urlpatterns = [
@@ -30,4 +32,6 @@ urlpatterns = [
         views.SFTMFile.as_view(), name='file'),
     url('c/(?P<container_name>[^/]+)$', views.Container.as_view(),
         name='container'),
+    url(r'^api/container/(?P<container_name>[^/]+)$', views.ContainerAPI.as_view()),
+    url(r'^api/token', rest_views.obtain_auth_token)
 ]

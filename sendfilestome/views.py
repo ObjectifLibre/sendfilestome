@@ -23,6 +23,11 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from sendfilestome import forms
 from sendfilestome import models
 from sendfilestome import utils
@@ -172,3 +177,32 @@ class SFTMFile(views.View):
 
         uploaded_file.delete()
         return HttpResponse(status=202)
+
+
+class ContainerAPI(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, container_name):
+        _set_user_props(request.user)
+        upload_form = forms.SFTMFileUpload(request.POST, request.FILES)
+        if upload_form.is_valid():
+            if not request.user.can_upload:
+                raise PermissionDenied
+            uploaded_file = upload_form.save(commit=False)
+
+            try:
+                container = models.Container.objects.get(name=container_name)
+            except models.Container.DoesNotExist:
+                # if container does not exist, we create it
+                container_form = forms.ContainerCreateForm()
+                container = container_form.save(commit=False)
+                container.name = container_name
+                container.listable = True
+                container.requires_auth = True
+                container.save()
+
+            uploaded_file.container = container
+            uploaded_file.save()
+            return Response("file correctly upload in  " + container_name, status=200)
+        return Response(upload_form.errors, status=500)
